@@ -1,478 +1,3870 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <title>Culina AI — Catering Assistant</title>
+    <meta
+        name="description"
+        content="Catering Intelligence - AI powered catering planning assistant"
+    >
+
+    <title>Catering Intelligence | AI Catering Assistant</title>
+
+
+    <!-- ======================================================
+         GOOGLE FONTS
+    ======================================================= -->
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
-          rel="stylesheet">
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
 
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='style.css') }}">
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <!-- ======================================================
+         STYLES
+    ======================================================= -->
+
+    <style>
+
+        /* ==================================================
+           ROOT
+        ================================================== */
+
+        :root {
+
+            --cream: #f8f7f2;
+            --cream-dark: #efede5;
+
+            --green: #123f34;
+            --green-dark: #0b3028;
+            --green-light: #1b5143;
+
+            --gold: #d4a84f;
+            --gold-light: #f5e8c8;
+
+            --white: #ffffff;
+
+            --text: #171b19;
+            --muted: #747873;
+
+            --border: #e5e1d7;
+
+            --shadow:
+                0 25px 70px rgba(15, 49, 40, 0.14);
+
+            --radius-xl: 32px;
+            --radius-lg: 22px;
+            --radius-md: 16px;
+            --radius-sm: 12px;
+
+        }
+
+
+        /* ==================================================
+           RESET
+        ================================================== */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+
+        body {
+
+            font-family:
+                "DM Sans",
+                sans-serif;
+
+            background:
+                var(--cream);
+
+            color:
+                var(--text);
+
+            min-height: 100vh;
+
+            overflow-x: hidden;
+        }
+
+
+        button,
+        input,
+        textarea {
+
+            font-family:
+                inherit;
+        }
+
+
+        button {
+            cursor: pointer;
+        }
+
+
+        /* ==================================================
+           BACKGROUND
+        ================================================== */
+
+        body::before {
+
+            content: "";
+
+            position: fixed;
+
+            width: 500px;
+            height: 500px;
+
+            border-radius: 50%;
+
+            background:
+                rgba(212, 168, 79, 0.09);
+
+            top: -220px;
+            right: -150px;
+
+            filter: blur(5px);
+
+            pointer-events: none;
+
+            animation:
+                floatBackground 12s ease-in-out infinite;
+        }
+
+
+        body::after {
+
+            content: "";
+
+            position: fixed;
+
+            width: 420px;
+            height: 420px;
+
+            border-radius: 50%;
+
+            background:
+                rgba(18, 63, 52, 0.06);
+
+            bottom: -220px;
+            left: -160px;
+
+            pointer-events: none;
+
+            animation:
+                floatBackground 15s ease-in-out infinite reverse;
+        }
+
+
+        @keyframes floatBackground {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(25px);
+            }
+        }
+
+
+        /* ==================================================
+           NAVBAR
+        ================================================== */
+
+        .navbar {
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 100;
+
+            height: 78px;
+
+            background:
+                rgba(248, 247, 242, 0.88);
+
+            backdrop-filter:
+                blur(18px);
+
+            -webkit-backdrop-filter:
+                blur(18px);
+
+            border-bottom:
+                1px solid rgba(229, 225, 215, 0.75);
+        }
+
+
+        .nav-inner {
+
+            max-width: 1190px;
+
+            height: 100%;
+
+            margin: auto;
+
+            padding:
+                0 24px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+        }
+
+
+        /* ==================================================
+           BRAND
+        ================================================== */
+
+        .brand {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 13px;
+
+            text-decoration: none;
+
+            color: var(--text);
+        }
+
+
+        .brand-icon {
+
+            width: 44px;
+            height: 44px;
+
+            border-radius: 14px;
+
+            background:
+                var(--green);
+
+            color:
+                var(--white);
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            font-size: 20px;
+
+            box-shadow:
+                0 10px 24px
+                rgba(18, 63, 52, 0.2);
+
+            transition:
+                transform .3s ease,
+                box-shadow .3s ease;
+        }
+
+
+        .brand:hover .brand-icon {
+
+            transform:
+                rotate(-8deg)
+                scale(1.06);
+
+            box-shadow:
+                0 14px 30px
+                rgba(18, 63, 52, 0.28);
+        }
+
+
+        .brand-name {
+
+            font-size: 16px;
+
+            font-weight: 700;
+
+            letter-spacing: -.3px;
+        }
+
+
+        .brand-subtitle {
+
+            display: block;
+
+            margin-top: 2px;
+
+            font-size: 10px;
+
+            color:
+                var(--muted);
+
+            font-weight: 500;
+        }
+
+
+        /* ==================================================
+           NAV LINKS
+        ================================================== */
+
+        .nav-links {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 38px;
+        }
+
+
+        .nav-links a {
+
+            color:
+                #656963;
+
+            text-decoration: none;
+
+            font-size: 14px;
+
+            font-weight: 500;
+
+            position: relative;
+
+            transition:
+                color .25s ease;
+        }
+
+
+        .nav-links a::after {
+
+            content: "";
+
+            position: absolute;
+
+            left: 0;
+            bottom: -7px;
+
+            width: 0;
+            height: 2px;
+
+            border-radius: 5px;
+
+            background:
+                var(--green);
+
+            transition:
+                width .25s ease;
+        }
+
+
+        .nav-links a:hover {
+
+            color:
+                var(--green);
+        }
+
+
+        .nav-links a:hover::after {
+
+            width: 100%;
+        }
+
+
+        /* ==================================================
+           NAV ACTION
+        ================================================== */
+
+        .nav-action {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+        }
+
+
+        .sparkle-button {
+
+            width: 44px;
+            height: 44px;
+
+            border-radius: 14px;
+
+            border:
+                1px solid var(--border);
+
+            background:
+                rgba(255,255,255,.75);
+
+            color:
+                var(--green);
+
+            font-size: 17px;
+
+            transition:
+                all .3s ease;
+        }
+
+
+        .sparkle-button:hover {
+
+            transform:
+                translateY(-3px);
+
+            box-shadow:
+                0 10px 25px
+                rgba(0,0,0,.08);
+        }
+
+
+        .nav-cta {
+
+            border: none;
+
+            padding:
+                14px 22px;
+
+            border-radius: 13px;
+
+            background:
+                var(--green);
+
+            color:
+                var(--white);
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            transition:
+                all .3s ease;
+
+            box-shadow:
+                0 8px 20px
+                rgba(18, 63, 52, .16);
+        }
+
+
+        .nav-cta:hover {
+
+            background:
+                var(--green-dark);
+
+            transform:
+                translateY(-3px);
+
+            box-shadow:
+                0 14px 28px
+                rgba(18, 63, 52, .23);
+        }
+
+
+        /* ==================================================
+           HERO
+        ================================================== */
+
+        .hero {
+
+            max-width: 1190px;
+
+            min-height:
+                calc(100vh - 78px);
+
+            margin:
+                0 auto;
+
+            padding:
+                70px 24px
+                70px;
+
+            display: grid;
+
+            grid-template-columns:
+                1.08fr
+                .92fr;
+
+            gap: 60px;
+
+            align-items: center;
+
+            position: relative;
+        }
+
+
+        /* ==================================================
+           HERO LEFT
+        ================================================== */
+
+        .hero-content {
+
+            animation:
+                heroReveal .9s ease both;
+        }
+
+
+        @keyframes heroReveal {
+
+            from {
+
+                opacity: 0;
+
+                transform:
+                    translateY(30px);
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform:
+                    translateY(0);
+            }
+        }
+
+
+        .eyebrow {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 9px;
+
+            padding:
+                10px 16px;
+
+            border-radius: 50px;
+
+            background:
+                #f5eddc;
+
+            border:
+                1px solid #ead9b7;
+
+            color:
+                #916c2f;
+
+            font-size: 11px;
+
+            font-weight: 700;
+
+            letter-spacing: 1.3px;
+
+            text-transform: uppercase;
+
+            margin-bottom: 30px;
+        }
+
+
+        .eyebrow-dot {
+
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+
+            background:
+                var(--gold);
+
+            box-shadow:
+                0 0 0 5px
+                rgba(212,168,79,.12);
+
+            animation:
+                pulseDot 2s infinite;
+        }
+
+
+        @keyframes pulseDot {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.35);
+            }
+        }
+
+
+        .hero-title {
+
+            font-family:
+                "Playfair Display",
+                serif;
+
+            font-size:
+                clamp(55px, 6.3vw, 82px);
+
+            line-height:
+                .92;
+
+            letter-spacing:
+                -4px;
+
+            margin-bottom:
+                28px;
+        }
+
+
+        .hero-title span {
+
+            display: block;
+
+            color:
+                var(--green);
+
+            font-style:
+                italic;
+        }
+
+
+        .hero-description {
+
+            max-width:
+                630px;
+
+            color:
+                var(--muted);
+
+            font-size:
+                17px;
+
+            line-height:
+                1.9;
+
+            margin-bottom:
+                34px;
+        }
+
+
+        /* ==================================================
+           HERO BUTTONS
+        ================================================== */
+
+        .hero-buttons {
+
+            display: flex;
+
+            gap: 12px;
+
+            align-items: center;
+        }
+
+
+        .primary-button {
+
+            border: none;
+
+            padding:
+                16px 23px;
+
+            border-radius:
+                13px;
+
+            background:
+                var(--green);
+
+            color:
+                white;
+
+            font-weight:
+                700;
+
+            font-size:
+                13px;
+
+            transition:
+                all .3s ease;
+
+            box-shadow:
+                0 12px 28px
+                rgba(18,63,52,.18);
+        }
+
+
+        .primary-button:hover {
+
+            background:
+                var(--green-dark);
+
+            transform:
+                translateY(-4px);
+
+            box-shadow:
+                0 18px 34px
+                rgba(18,63,52,.25);
+        }
+
+
+        .secondary-button {
+
+            border:
+                1px solid var(--border);
+
+            padding:
+                15px 21px;
+
+            border-radius:
+                13px;
+
+            background:
+                rgba(255,255,255,.8);
+
+            color:
+                var(--text);
+
+            font-weight:
+                700;
+
+            font-size:
+                13px;
+
+            transition:
+                all .3s ease;
+        }
+
+
+        .secondary-button:hover {
+
+            background:
+                white;
+
+            transform:
+                translateY(-4px);
+
+            box-shadow:
+                0 12px 28px
+                rgba(0,0,0,.08);
+        }
+
+
+        /* ==================================================
+           HERO RIGHT / PREVIEW CARD
+        ================================================== */
+
+        .hero-visual {
+
+            position: relative;
+
+            animation:
+                cardReveal 1s .15s ease both;
+        }
+
+
+        @keyframes cardReveal {
+
+            from {
+
+                opacity: 0;
+
+                transform:
+                    translateY(35px)
+                    scale(.97);
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform:
+                    translateY(0)
+                    scale(1);
+            }
+        }
+
+
+        .planner-card {
+
+            position: relative;
+
+            min-height:
+                475px;
+
+            background:
+                var(--green);
+
+            border-radius:
+                30px;
+
+            padding:
+                25px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 30px 80px
+                rgba(18,63,52,.23);
+        }
+
+
+        .planner-card::before {
+
+            content: "";
+
+            position: absolute;
+
+            width: 250px;
+            height: 250px;
+
+            border-radius: 50%;
+
+            background:
+                rgba(212,168,79,.13);
+
+            right: -80px;
+            top: -70px;
+
+            animation:
+                orbitGlow 7s ease-in-out infinite;
+        }
+
+
+        .planner-card::after {
+
+            content: "";
+
+            position: absolute;
+
+            width: 180px;
+            height: 180px;
+
+            border-radius: 50%;
+
+            background:
+                rgba(255,255,255,.035);
+
+            left: -90px;
+            bottom: -90px;
+        }
+
+
+        @keyframes orbitGlow {
+
+            0%,
+            100% {
+                transform:
+                    translate(0,0)
+                    scale(1);
+            }
+
+            50% {
+                transform:
+                    translate(-20px,20px)
+                    scale(1.1);
+            }
+        }
+
+
+        .planner-header {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            position: relative;
+
+            z-index: 2;
+        }
+
+
+        .assistant-profile {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+        }
+
+
+        .assistant-icon {
+
+            width: 44px;
+            height: 44px;
+
+            border-radius: 14px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            background:
+                rgba(255,255,255,.1);
+
+            color:
+                #f4d68e;
+
+            font-size: 18px;
+        }
+
+
+        .assistant-name {
+
+            color:
+                white;
+
+            font-size:
+                14px;
+
+            font-weight:
+                700;
+        }
+
+
+        .assistant-status {
+
+            color:
+                #a8d6c7;
+
+            font-size:
+                10px;
+
+            margin-top:
+                3px;
+        }
+
+
+        .online-status {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 6px;
+
+            color:
+                #c0ddcf;
+
+            font-size:
+                10px;
+        }
+
+
+        .online-dot {
+
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+
+            background:
+                #70c79d;
+
+            box-shadow:
+                0 0 0 5px
+                rgba(112,199,157,.08);
+        }
+
+
+        .planner-content {
+
+            position:
+                relative;
+
+            z-index:
+                2;
+
+            padding-top:
+                58px;
+        }
+
+
+        .planner-title {
+
+            font-family:
+                "Playfair Display",
+                serif;
+
+            color:
+                white;
+
+            font-size:
+                37px;
+
+            line-height:
+                1.08;
+
+            margin-bottom:
+                15px;
+        }
+
+
+        .planner-text {
+
+            color:
+                #a8c3ba;
+
+            font-size:
+                14px;
+
+            line-height:
+                1.7;
+
+            margin-bottom:
+                25px;
+        }
+
+
+        /* ==================================================
+           QUICK ACTIONS
+        ================================================== */
+
+        .quick-actions {
+
+            display:
+                flex;
+
+            flex-direction:
+                column;
+
+            gap:
+                11px;
+        }
+
+
+        .quick-action {
+
+            width:
+                100%;
+
+            border:
+                1px solid
+                rgba(255,255,255,.12);
+
+            background:
+                rgba(255,255,255,.07);
+
+            color:
+                #f5f6f3;
+
+            border-radius:
+                13px;
+
+            padding:
+                15px 16px;
+
+            text-align:
+                left;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            gap:
+                12px;
+
+            font-size:
+                12px;
+
+            font-weight:
+                600;
+
+            transition:
+                all .3s ease;
+        }
+
+
+        .quick-action-icon {
+
+            color:
+                #e7c773;
+
+            font-size:
+                14px;
+
+            width:
+                18px;
+        }
+
+
+        .quick-action:hover {
+
+            background:
+                rgba(255,255,255,.13);
+
+            border-color:
+                rgba(255,255,255,.22);
+
+            transform:
+                translateX(6px);
+        }
+
+
+        .planner-footer {
+
+            position:
+                absolute;
+
+            bottom:
+                22px;
+
+            left:
+                25px;
+
+            right:
+                25px;
+
+            display:
+                flex;
+
+            justify-content:
+                space-between;
+
+            color:
+                #7fa79b;
+
+            font-size:
+                9px;
+        }
+
+
+        .ready-state {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            gap:
+                6px;
+        }
+
+
+        .ready-dot {
+
+            width:
+                6px;
+
+            height:
+                6px;
+
+            border-radius:
+                50%;
+
+            background:
+                #72c39d;
+        }
+
+
+        /* ==================================================
+           FEATURE STRIP
+        ================================================== */
+
+        .feature-strip {
+
+            max-width:
+                1190px;
+
+            margin:
+                -5px auto 0;
+
+            padding:
+                0 24px 45px;
+
+            display:
+                grid;
+
+            grid-template-columns:
+                repeat(3,1fr);
+
+            gap:
+                1px;
+        }
+
+
+        .feature {
+
+            padding:
+                24px;
+
+            border-top:
+                1px solid var(--border);
+
+            border-bottom:
+                1px solid var(--border);
+        }
+
+
+        .feature-icon {
+
+            font-size:
+                18px;
+
+            color:
+                var(--green);
+
+            margin-bottom:
+                10px;
+        }
+
+
+        .feature h3 {
+
+            font-size:
+                14px;
+
+            margin-bottom:
+                5px;
+        }
+
+
+        .feature p {
+
+            color:
+                var(--muted);
+
+            font-size:
+                11px;
+
+            line-height:
+                1.6;
+        }
+
+
+        /* ==================================================
+           CHAT FLOAT BUTTON
+        ================================================== */
+
+        .chat-float {
+
+            position:
+                fixed;
+
+            right:
+                28px;
+
+            bottom:
+                25px;
+
+            width:
+                58px;
+
+            height:
+                58px;
+
+            border:
+                none;
+
+            border-radius:
+                50%;
+
+            background:
+                var(--green);
+
+            color:
+                white;
+
+            font-size:
+                20px;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            box-shadow:
+                0 16px 38px
+                rgba(18,63,52,.28);
+
+            z-index:
+                200;
+
+            transition:
+                all .3s ease;
+        }
+
+
+        .chat-float:hover {
+
+            transform:
+                translateY(-5px)
+                rotate(8deg);
+
+            background:
+                var(--green-dark);
+        }
+
+
+        .notification-badge {
+
+            position:
+                absolute;
+
+            right:
+                -1px;
+
+            top:
+                -2px;
+
+            width:
+                17px;
+
+            height:
+                17px;
+
+            border-radius:
+                50%;
+
+            background:
+                #d85b4d;
+
+            color:
+                white;
+
+            font-size:
+                9px;
+
+            font-weight:
+                700;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            border:
+                2px solid
+                var(--cream);
+        }
+
+
+        /* ==================================================
+           CHAT WINDOW
+        ================================================== */
+
+        .chat-window {
+
+            position:
+                fixed;
+
+            right:
+                28px;
+
+            bottom:
+                96px;
+
+            width:
+                390px;
+
+            height:
+                min(610px, calc(100vh - 120px));
+
+            background:
+                white;
+
+            border:
+                1px solid
+                rgba(229,225,215,.9);
+
+            border-radius:
+                22px;
+
+            box-shadow:
+                0 30px 90px
+                rgba(0,0,0,.20);
+
+            z-index:
+                190;
+
+            overflow:
+                hidden;
+
+            display:
+                flex;
+
+            flex-direction:
+                column;
+
+            opacity:
+                0;
+
+            visibility:
+                hidden;
+
+            transform:
+                translateY(25px)
+                scale(.96);
+
+            transform-origin:
+                bottom right;
+
+            transition:
+                opacity .3s ease,
+                transform .3s ease,
+                visibility .3s ease;
+        }
+
+
+        .chat-window.active {
+
+            opacity:
+                1;
+
+            visibility:
+                visible;
+
+            transform:
+                translateY(0)
+                scale(1);
+        }
+
+
+        /* ==================================================
+           CHAT HEADER
+        ================================================== */
+
+        .chat-header {
+
+            background:
+                var(--green);
+
+            padding:
+                18px;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                space-between;
+
+            position:
+                relative;
+
+            overflow:
+                hidden;
+        }
+
+
+        .chat-header::after {
+
+            content:
+                "";
+
+            position:
+                absolute;
+
+            width:
+                150px;
+
+            height:
+                150px;
+
+            border-radius:
+                50%;
+
+            background:
+                rgba(212,168,79,.1);
+
+            right:
+                -60px;
+
+            top:
+                -80px;
+        }
+
+
+        .chat-header-left {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            gap:
+                11px;
+
+            position:
+                relative;
+
+            z-index:
+                2;
+        }
+
+
+        .chat-header-icon {
+
+            width:
+                40px;
+
+            height:
+                40px;
+
+            border-radius:
+                12px;
+
+            background:
+                rgba(255,255,255,.1);
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            color:
+                #f0d183;
+        }
+
+
+        .chat-title {
+
+            color:
+                white;
+
+            font-size:
+                14px;
+
+            font-weight:
+                700;
+        }
+
+
+        .chat-subtitle {
+
+            color:
+                #9fc2b6;
+
+            font-size:
+                9px;
+
+            margin-top:
+                3px;
+        }
+
+
+        .chat-close {
+
+            position:
+                relative;
+
+            z-index:
+                3;
+
+            width:
+                32px;
+
+            height:
+                32px;
+
+            border:
+                none;
+
+            background:
+                rgba(255,255,255,.08);
+
+            color:
+                white;
+
+            border-radius:
+                10px;
+
+            font-size:
+                16px;
+
+            transition:
+                background .2s ease;
+        }
+
+
+        .chat-close:hover {
+
+            background:
+                rgba(255,255,255,.17);
+        }
+
+
+        /* ==================================================
+           CHAT MESSAGES
+        ================================================== */
+
+        .chat-messages {
+
+            flex:
+                1;
+
+            overflow-y:
+                auto;
+
+            padding:
+                18px;
+
+            background:
+                #fbfaf7;
+
+            scroll-behavior:
+                smooth;
+        }
+
+
+        .chat-messages::-webkit-scrollbar {
+
+            width:
+                7px;
+        }
+
+
+        .chat-messages::-webkit-scrollbar-thumb {
+
+            background:
+                #d9d6cd;
+
+            border-radius:
+                10px;
+        }
+
+
+        .message-row {
+
+            display:
+                flex;
+
+            margin-bottom:
+                13px;
+
+            animation:
+                messageIn .3s ease both;
+        }
+
+
+        @keyframes messageIn {
+
+            from {
+
+                opacity:
+                    0;
+
+                transform:
+                    translateY(8px);
+            }
+
+            to {
+
+                opacity:
+                    1;
+
+                transform:
+                    translateY(0);
+            }
+        }
+
+
+        .message-row.user {
+
+            justify-content:
+                flex-end;
+        }
+
+
+        .message-row.assistant {
+
+            justify-content:
+                flex-start;
+        }
+
+
+        .message {
+
+            max-width:
+                86%;
+
+            padding:
+                13px 14px;
+
+            border-radius:
+                15px;
+
+            font-size:
+                12px;
+
+            line-height:
+                1.65;
+
+            word-wrap:
+                break-word;
+        }
+
+
+        .message-row.user .message {
+
+            background:
+                var(--green);
+
+            color:
+                white;
+
+            border-bottom-right-radius:
+                5px;
+        }
+
+
+        .message-row.assistant .message {
+
+            background:
+                white;
+
+            color:
+                #4f534f;
+
+            border:
+                1px solid
+                #e7e3da;
+
+            border-bottom-left-radius:
+                5px;
+
+            box-shadow:
+                0 4px 15px
+                rgba(0,0,0,.025);
+        }
+
+
+        .message strong {
+
+            color:
+                inherit;
+
+            font-weight:
+                700;
+        }
+
+
+        .message ul {
+
+            margin:
+                8px 0 4px 18px;
+        }
+
+
+        .message ol {
+
+            margin:
+                8px 0 4px 18px;
+        }
+
+
+        .message li {
+
+            margin-bottom:
+                4px;
+        }
+
+
+        .message h1,
+        .message h2,
+        .message h3 {
+
+            font-size:
+                13px;
+
+            margin:
+                6px 0;
+        }
+
+
+        .message p {
+
+            margin-bottom:
+                6px;
+        }
+
+
+        .message p:last-child {
+
+            margin-bottom:
+                0;
+        }
+
+
+        .message-time {
+
+            display:
+                block;
+
+            font-size:
+                8px;
+
+            margin-top:
+                7px;
+
+            opacity:
+                .45;
+        }
+
+
+        /* ==================================================
+           TYPING
+        ================================================== */
+
+        .typing-row {
+
+            display:
+                flex;
+
+            justify-content:
+                flex-start;
+
+            margin-bottom:
+                13px;
+        }
+
+
+        .typing-bubble {
+
+            background:
+                white;
+
+            border:
+                1px solid
+                #e7e3da;
+
+            border-radius:
+                15px;
+
+            border-bottom-left-radius:
+                5px;
+
+            padding:
+                12px 15px;
+
+            display:
+                flex;
+
+            gap:
+                5px;
+
+            align-items:
+                center;
+        }
+
+
+        .typing-dot {
+
+            width:
+                6px;
+
+            height:
+                6px;
+
+            border-radius:
+                50%;
+
+            background:
+                #8a8e89;
+
+            animation:
+                typing 1.2s infinite;
+        }
+
+
+        .typing-dot:nth-child(2) {
+
+            animation-delay:
+                .15s;
+        }
+
+
+        .typing-dot:nth-child(3) {
+
+            animation-delay:
+                .3s;
+        }
+
+
+        @keyframes typing {
+
+            0%,
+            60%,
+            100% {
+                transform:
+                    translateY(0);
+
+                opacity:
+                    .4;
+            }
+
+            30% {
+                transform:
+                    translateY(-5px);
+
+                opacity:
+                    1;
+            }
+        }
+
+
+        /* ==================================================
+           QUICK CHAT CHIPS
+        ================================================== */
+
+        .chat-chips {
+
+            display:
+                flex;
+
+            gap:
+                7px;
+
+            overflow-x:
+                auto;
+
+            padding:
+                10px 14px;
+
+            border-top:
+                1px solid
+                #e9e5dc;
+
+            background:
+                white;
+        }
+
+
+        .chat-chips::-webkit-scrollbar {
+
+            display:
+                none;
+        }
+
+
+        .chip {
+
+            flex:
+                0 0 auto;
+
+            padding:
+                8px 11px;
+
+            border-radius:
+                50px;
+
+            border:
+                1px solid
+                #e1ddd4;
+
+            background:
+                #faf9f6;
+
+            color:
+                #5d625d;
+
+            font-size:
+                9px;
+
+            font-weight:
+                600;
+
+            transition:
+                all .2s ease;
+        }
+
+
+        .chip:hover {
+
+            background:
+                var(--green);
+
+            color:
+                white;
+
+            border-color:
+                var(--green);
+
+            transform:
+                translateY(-2px);
+        }
+
+
+        /* ==================================================
+           INPUT AREA
+        ================================================== */
+
+        .chat-input-area {
+
+            background:
+                white;
+
+            padding:
+                12px 14px 10px;
+
+            border-top:
+                1px solid
+                #e9e5dc;
+        }
+
+
+        .input-wrapper {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            gap:
+                8px;
+
+            padding:
+                4px;
+
+            border:
+                1px solid
+                var(--green);
+
+            border-radius:
+                14px;
+
+            background:
+                white;
+
+            transition:
+                box-shadow .2s ease;
+        }
+
+
+        .input-wrapper:focus-within {
+
+            box-shadow:
+                0 0 0 4px
+                rgba(18,63,52,.08);
+        }
+
+
+        #userInput {
+
+            flex:
+                1;
+
+            border:
+                none;
+
+            outline:
+                none;
+
+            resize:
+                none;
+
+            min-height:
+                39px;
+
+            max-height:
+                100px;
+
+            padding:
+                9px 10px;
+
+            color:
+                var(--text);
+
+            font-size:
+                11px;
+
+            background:
+                transparent;
+        }
+
+
+        #userInput::placeholder {
+
+            color:
+                #9a9d98;
+        }
+
+
+        .send-button {
+
+            width:
+                42px;
+
+            height:
+                42px;
+
+            border:
+                none;
+
+            border-radius:
+                11px;
+
+            background:
+                var(--green);
+
+            color:
+                white;
+
+            font-size:
+                16px;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            transition:
+                all .25s ease;
+        }
+
+
+        .send-button:hover {
+
+            background:
+                var(--green-dark);
+
+            transform:
+                translateY(-2px);
+        }
+
+
+        .send-button:disabled {
+
+            opacity:
+                .45;
+
+            cursor:
+                not-allowed;
+
+            transform:
+                none;
+        }
+
+
+        .input-note {
+
+            text-align:
+                center;
+
+            color:
+                #aaa9a2;
+
+            font-size:
+                8px;
+
+            padding-top:
+                8px;
+        }
+
+
+        /* ==================================================
+           SCROLL REVEAL
+        ================================================== */
+
+        .reveal {
+
+            opacity:
+                0;
+
+            transform:
+                translateY(25px);
+
+            transition:
+                opacity .7s ease,
+                transform .7s ease;
+        }
+
+
+        .reveal.visible {
+
+            opacity:
+                1;
+
+            transform:
+                translateY(0);
+        }
+
+
+        /* ==================================================
+           RESPONSIVE
+        ================================================== */
+
+        @media (max-width: 950px) {
+
+            .nav-links {
+                display: none;
+            }
+
+
+            .hero {
+
+                grid-template-columns:
+                    1fr;
+
+                padding-top:
+                    55px;
+
+                gap:
+                    45px;
+            }
+
+
+            .hero-title {
+
+                font-size:
+                    clamp(52px, 10vw, 76px);
+            }
+
+
+            .hero-description {
+
+                max-width:
+                    700px;
+            }
+
+
+            .planner-card {
+
+                max-width:
+                    620px;
+
+                margin:
+                    auto;
+            }
+
+
+            .feature-strip {
+
+                grid-template-columns:
+                    1fr;
+            }
+
+        }
+
+
+        @media (max-width: 600px) {
+
+            .navbar {
+
+                height:
+                    70px;
+            }
+
+
+            .nav-inner {
+
+                padding:
+                    0 16px;
+            }
+
+
+            .nav-cta {
+
+                display:
+                    none;
+            }
+
+
+            .hero {
+
+                padding:
+                    45px 18px 40px;
+
+                min-height:
+                    auto;
+            }
+
+
+            .hero-title {
+
+                font-size:
+                    50px;
+
+                letter-spacing:
+                    -2.5px;
+            }
+
+
+            .hero-description {
+
+                font-size:
+                    14px;
+
+                line-height:
+                    1.7;
+            }
+
+
+            .hero-buttons {
+
+                flex-direction:
+                    column;
+
+                align-items:
+                    stretch;
+            }
+
+
+            .primary-button,
+            .secondary-button {
+
+                width:
+                    100%;
+            }
+
+
+            .planner-card {
+
+                min-height:
+                    450px;
+
+                padding:
+                    20px;
+
+                border-radius:
+                    24px;
+            }
+
+
+            .planner-title {
+
+                font-size:
+                    31px;
+            }
+
+
+            .chat-window {
+
+                right:
+                    10px;
+
+                left:
+                    10px;
+
+                bottom:
+                    84px;
+
+                width:
+                    auto;
+
+                height:
+                    min(650px, calc(100vh - 105px));
+
+                border-radius:
+                    20px;
+            }
+
+
+            .chat-float {
+
+                right:
+                    18px;
+
+                bottom:
+                    18px;
+            }
+
+
+            .feature-strip {
+
+                padding:
+                    0 18px 35px;
+            }
+
+        }
+
+
+        @media (max-width: 380px) {
+
+            .hero-title {
+
+                font-size:
+                    44px;
+            }
+
+
+            .planner-title {
+
+                font-size:
+                    27px;
+            }
+
+        }
+
+    </style>
+
 </head>
+
 
 <body>
 
-<div class="app-shell">
 
-    <!-- ================= SIDEBAR ================= -->
+    <!-- ======================================================
+         NAVBAR
+    ======================================================= -->
 
-    <aside class="sidebar" id="sidebar">
+    <header class="navbar">
 
-        <div class="brand">
+        <div class="nav-inner">
 
-            <div class="brand-mark">
-                <span>✦</span>
-            </div>
 
-            <div class="brand-text">
-                <h2>Culina</h2>
-                <p>AI Catering Studio</p>
-            </div>
+            <a
+                href="#"
+                class="brand"
+                onclick="scrollToTop(); return false;"
+            >
 
-        </div>
-
-
-        <button class="new-chat-btn" onclick="newChat()">
-
-            <span class="plus">＋</span>
-
-            <span>New conversation</span>
-
-        </button>
-
-
-        <div class="nav-label">
-            WORKSPACE
-        </div>
-
-
-        <nav class="sidebar-nav">
-
-            <button class="nav-item active">
-
-                <span class="nav-icon">⌂</span>
-
-                <span>Assistant</span>
-
-            </button>
-
-
-            <button class="nav-item"
-                    onclick="quickPrompt('Create a professional catering menu for my event')">
-
-                <span class="nav-icon">◈</span>
-
-                <span>Menu Planner</span>
-
-            </button>
-
-
-            <button class="nav-item"
-                    onclick="quickPrompt('Calculate food portions for my guests')">
-
-                <span class="nav-icon">◫</span>
-
-                <span>Portion Planning</span>
-
-            </button>
-
-
-            <button class="nav-item"
-                    onclick="quickPrompt('Help me plan dietary requirements for my catering event')">
-
-                <span class="nav-icon">◇</span>
-
-                <span>Dietary Planning</span>
-
-            </button>
-
-
-            <button class="nav-item"
-                    onclick="quickPrompt('Help me plan staff requirements for a catering event')">
-
-                <span class="nav-icon">♙</span>
-
-                <span>Staff Planning</span>
-
-            </button>
-
-        </nav>
-
-
-        <div class="sidebar-spacer"></div>
-
-
-        <!-- PRO CARD -->
-
-        <div class="pro-card">
-
-            <div class="pro-glow"></div>
-
-            <div class="pro-icon">✦</div>
-
-            <div class="pro-title">
-                Catering Intelligence
-            </div>
-
-            <div class="pro-description">
-                Smart planning for better events,
-                menus and guest experiences.
-            </div>
-
-        </div>
-
-
-        <div class="sidebar-footer">
-
-            <div class="online-indicator"></div>
-
-            <div>
-                <strong>AI Online</strong>
-                <span>Gemini powered</span>
-            </div>
-
-        </div>
-
-    </aside>
-
-
-    <!-- ================= MAIN ================= -->
-
-    <main class="main-content">
-
-
-        <!-- HEADER -->
-
-        <header class="topbar">
-
-            <div class="mobile-menu"
-                 onclick="toggleSidebar()">
-                ☰
-            </div>
-
-
-            <div class="header-left">
-
-                <div class="mini-avatar">
+                <div class="brand-icon">
                     ✦
                 </div>
 
+
                 <div>
 
-                    <div class="header-title">
-                        Catering Assistant
+                    <div class="brand-name">
+                        Catering Intelligence
                     </div>
 
-                    <div class="header-status">
-
-                        <span class="status-dot"></span>
-
-                        Ready to assist
-
-                    </div>
+                    <span class="brand-subtitle">
+                        Smart event planning
+                    </span>
 
                 </div>
 
-            </div>
+            </a>
 
 
-            <div class="header-right">
+            <nav class="nav-links">
 
-                <div class="secure-badge">
+                <a href="#solutions">
+                    Solutions
+                </a>
 
-                    <span>●</span>
+                <a href="#planner">
+                    Planner
+                </a>
 
-                    AI Assistant
+                <a href="#about">
+                    About
+                </a>
 
-                </div>
+            </nav>
 
 
-                <button class="header-btn"
-                        onclick="clearChat()"
-                        title="Clear conversation">
+            <div class="nav-action">
 
-                    ⌫
+                <button
+                    class="sparkle-button"
+                    onclick="openChat()"
+                    aria-label="Open AI assistant"
+                >
+                    ✦
+                </button>
 
+
+                <button
+                    class="nav-cta"
+                    onclick="openChat()"
+                >
+                    Start Planning →
                 </button>
 
             </div>
 
-        </header>
+        </div>
+
+    </header>
 
 
-        <!-- ================= CHAT ================= -->
 
-        <section class="chat-container"
-                 id="chatArea">
+    <!-- ======================================================
+         HERO
+    ======================================================= -->
 
-
-            <!-- HERO -->
-
-            <div class="hero"
-                 id="welcomeScreen">
+    <main>
 
 
-                <div class="hero-orb orb-one"></div>
+        <section
+            class="hero"
+            id="planner"
+        >
 
-                <div class="hero-orb orb-two"></div>
 
+            <!-- LEFT -->
 
-                <div class="hero-logo">
-
-                    <div class="hero-logo-inner">
-                        ✦
-                    </div>
-
-                </div>
+            <div class="hero-content">
 
 
                 <div class="eyebrow">
 
-                    <span></span>
+                    <span class="eyebrow-dot"></span>
 
-                    INTELLIGENT CATERING PLANNING
-
-                    <span></span>
+                    AI-POWERED CATERING INTELLIGENCE
 
                 </div>
 
 
-                <h1>
+                <h1 class="hero-title">
 
                     Plan beautifully.
-                    <br>
 
-                    <em>Serve confidently.</em>
+                    <span>
+                        Serve confidently.
+                    </span>
 
                 </h1>
 
 
                 <p class="hero-description">
 
-                    Your professional AI partner for
-                    menus, portions, dietary requirements,
-                    staffing and complete event planning.
+                    Your intelligent partner for menus,
+                    portions, dietary requirements,
+                    staffing and complete event planning
+                    — all in one place.
 
                 </p>
 
 
-                <!-- FEATURE PILLS -->
+                <div class="hero-buttons">
 
-                <div class="feature-pills">
-
-                    <div class="feature-pill">
-                        <span>✦</span>
-                        Smart Menus
-                    </div>
-
-                    <div class="feature-pill">
-                        <span>◫</span>
-                        Portion Planning
-                    </div>
-
-                    <div class="feature-pill">
-                        <span>◇</span>
-                        Dietary Support
-                    </div>
-
-                </div>
-
-
-                <!-- ACTION CARDS -->
-
-                <div class="action-grid">
-
-
-                    <button class="action-card"
-                            onclick="quickPrompt('Create a premium wedding catering menu for 150 guests')">
-
-                        <div class="action-top">
-
-                            <div class="action-icon wedding">
-                                ♢
-                            </div>
-
-                            <span class="arrow">↗</span>
-
-                        </div>
-
-                        <h3>
-                            Wedding Planning
-                        </h3>
-
-                        <p>
-                            Design an elegant menu
-                            for your special event.
-                        </p>
-
+                    <button
+                        class="primary-button"
+                        onclick="document.getElementById('solutions').scrollIntoView({behavior:'smooth'})"
+                    >
+                        Explore Solutions →
                     </button>
 
 
-                    <button class="action-card"
-                            onclick="quickPrompt('Calculate food quantities and portions for 100 guests')">
-
-                        <div class="action-top">
-
-                            <div class="action-icon portions">
-                                ◫
-                            </div>
-
-                            <span class="arrow">↗</span>
-
-                        </div>
-
-                        <h3>
-                            Portion Planning
-                        </h3>
-
-                        <p>
-                            Estimate quantities and
-                            servings for your guests.
-                        </p>
-
+                    <button
+                        class="secondary-button"
+                        onclick="openChat()"
+                    >
+                        Ask Catering AI ✦
                     </button>
-
-
-                    <button class="action-card"
-                            onclick="quickPrompt('Create a vegetarian and dietary-friendly catering menu')">
-
-                        <div class="action-top">
-
-                            <div class="action-icon dietary">
-                                ◇
-                            </div>
-
-                            <span class="arrow">↗</span>
-
-                        </div>
-
-                        <h3>
-                            Dietary Planning
-                        </h3>
-
-                        <p>
-                            Build menus around
-                            special dietary needs.
-                        </p>
-
-                    </button>
-
-
-                    <button class="action-card"
-                            onclick="quickPrompt('Create a professional catering plan for a corporate event')">
-
-                        <div class="action-top">
-
-                            <div class="action-icon corporate">
-                                ▣
-                            </div>
-
-                            <span class="arrow">↗</span>
-
-                        </div>
-
-                        <h3>
-                            Corporate Events
-                        </h3>
-
-                        <p>
-                            Create polished menus
-                            for professional events.
-                        </p>
-
-                    </button>
-
 
                 </div>
 
             </div>
 
 
-            <!-- MESSAGES -->
 
-            <div id="messages"></div>
+            <!-- RIGHT -->
 
+            <div class="hero-visual">
+
+                <div class="planner-card">
+
+
+                    <div class="planner-header">
+
+
+                        <div class="assistant-profile">
+
+                            <div class="assistant-icon">
+                                ✦
+                            </div>
+
+
+                            <div>
+
+                                <div class="assistant-name">
+                                    Catering Assistant
+                                </div>
+
+                                <div class="assistant-status">
+                                    Gemini AI powered
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="online-status">
+
+                            <span class="online-dot"></span>
+
+                            Online
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="planner-content">
+
+                        <h2 class="planner-title">
+                            What are we planning today?
+                        </h2>
+
+
+                        <p class="planner-text">
+                            Get intelligent recommendations
+                            for your next event.
+                        </p>
+
+
+                        <div class="quick-actions">
+
+
+                            <button
+                                class="quick-action"
+                                onclick="sendQuickMessage('Plan a wedding menu')"
+                            >
+
+                                <span class="quick-action-icon">
+                                    ✦
+                                </span>
+
+                                <span>
+                                    Plan a wedding menu
+                                </span>
+
+                            </button>
+
+
+                            <button
+                                class="quick-action"
+                                onclick="sendQuickMessage('Calculate food portions')"
+                            >
+
+                                <span class="quick-action-icon">
+                                    ◇
+                                </span>
+
+                                <span>
+                                    Calculate food portions
+                                </span>
+
+                            </button>
+
+
+                            <button
+                                class="quick-action"
+                                onclick="sendQuickMessage('Create a dietary-friendly menu')"
+                            >
+
+                                <span class="quick-action-icon">
+                                    ◇
+                                </span>
+
+                                <span>
+                                    Create a dietary-friendly menu
+                                </span>
+
+                            </button>
+
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="planner-footer">
+
+                        <div class="ready-state">
+
+                            <span class="ready-dot"></span>
+
+                            Ready to assist
+
+                        </div>
+
+
+                        <span>
+                            AI planning assistant
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
 
         </section>
 
 
-        <!-- ================= INPUT ================= -->
 
-        <div class="composer-area">
+        <!-- ==================================================
+             FEATURES
+        =================================================== -->
 
-
-            <div class="composer">
-
-
-                <button class="attach-btn"
-                        title="More options">
-
-                    ＋
-
-                </button>
+        <section
+            class="feature-strip"
+            id="solutions"
+        >
 
 
-                <textarea
-                    id="messageInput"
-                    rows="1"
-                    placeholder="Ask Culina anything about your catering event..."
-                    onkeydown="handleKey(event)"
-                ></textarea>
+            <div class="feature reveal">
+
+                <div class="feature-icon">
+                    ✦
+                </div>
+
+                <h3>
+                    Smart Menus
+                </h3>
+
+                <p>
+                    Build thoughtful menus based on
+                    your event and guest requirements.
+                </p>
+
+            </div>
 
 
-                <div class="composer-actions">
+            <div class="feature reveal">
 
-                    <button class="voice-btn"
-                            title="Voice input">
+                <div class="feature-icon">
+                    ◇
+                </div>
 
-                        ◉
+                <h3>
+                    Portion Planning
+                </h3>
 
-                    </button>
+                <p>
+                    Estimate food quantities and servings
+                    for your guest count.
+                </p>
+
+            </div>
 
 
-                    <button id="sendButton"
-                            class="send-btn"
-                            onclick="sendMessage()">
+            <div
+                class="feature reveal"
+                id="about"
+            >
 
-                        <span>↑</span>
+                <div class="feature-icon">
+                    ◇
+                </div>
 
-                    </button>
+                <h3>
+                    Dietary Support
+                </h3>
+
+                <p>
+                    Create menus around vegetarian,
+                    dietary and special requirements.
+                </p>
+
+            </div>
+
+
+        </section>
+
+    </main>
+
+
+
+    <!-- ======================================================
+         CHAT FLOAT BUTTON
+    ======================================================= -->
+
+    <button
+        class="chat-float"
+        id="chatFloat"
+        onclick="toggleChat()"
+        aria-label="Open Catering Assistant"
+    >
+
+        <span id="floatIcon">
+            ✦
+        </span>
+
+
+        <span
+            class="notification-badge"
+            id="notificationBadge"
+        >
+            1
+        </span>
+
+    </button>
+
+
+
+    <!-- ======================================================
+         CHAT WINDOW
+    ======================================================= -->
+
+    <section
+        class="chat-window"
+        id="chatWindow"
+        aria-label="Catering Assistant"
+    >
+
+
+        <!-- HEADER -->
+
+        <div class="chat-header">
+
+
+            <div class="chat-header-left">
+
+
+                <div class="chat-header-icon">
+                    ✦
+                </div>
+
+
+                <div>
+
+                    <div class="chat-title">
+                        Catering Assistant
+                    </div>
+
+                    <div class="chat-subtitle">
+                        Gemini AI planning assistant • Online
+                    </div>
 
                 </div>
 
             </div>
 
 
-            <div class="composer-note">
+            <button
+                class="chat-close"
+                onclick="closeChat()"
+                aria-label="Close chat"
+            >
+                ×
+            </button>
 
-                <span>
-                    Enter to send · Shift + Enter for new line
-                </span>
+        </div>
 
-                <span>
-                    Culina AI may make mistakes. Verify important details.
-                </span>
+
+
+        <!-- MESSAGES -->
+
+        <div
+            class="chat-messages"
+            id="chatMessages"
+        >
+
+            <!--
+                Initial greeting only.
+                This is NOT a hardcoded answer to a user question.
+            -->
+
+            <div class="message-row assistant">
+
+                <div class="message">
+
+                    <strong>✨ Welcome!</strong>
+
+                    <p>
+                        I’m your Catering Assistant.
+                        Tell me about your event, guest count,
+                        cuisine preference and dietary requirements,
+                        and I’ll help you build a smart catering plan.
+                    </p>
+
+                    <span class="message-time">
+                        Just now
+                    </span>
+
+                </div>
 
             </div>
 
         </div>
 
 
-    </main>
 
-</div>
+        <!-- QUICK CHIPS -->
+
+        <div class="chat-chips">
 
 
-<script src="{{ url_for('static', filename='script.js') }}"></script>
+            <button
+                class="chip"
+                onclick="sendQuickMessage('Plan a wedding menu')"
+            >
+                Wedding menu
+            </button>
+
+
+            <button
+                class="chip"
+                onclick="sendQuickMessage('Calculate food portions')"
+            >
+                Portions
+            </button>
+
+
+            <button
+                class="chip"
+                onclick="sendQuickMessage('Create a vegetarian menu')"
+            >
+                Vegetarian
+            </button>
+
+
+            <button
+                class="chip"
+                onclick="sendQuickMessage('Plan a corporate catering menu')"
+            >
+                Corporate
+            </button>
+
+
+        </div>
+
+
+
+        <!-- INPUT -->
+
+        <div class="chat-input-area">
+
+
+            <div class="input-wrapper">
+
+
+                <textarea
+                    id="userInput"
+                    rows="1"
+                    maxlength="4000"
+                    placeholder="Ask me anything about catering..."
+                    aria-label="Message"
+                ></textarea>
+
+
+                <button
+                    class="send-button"
+                    id="sendButton"
+                    onclick="sendMessage()"
+                    aria-label="Send message"
+                >
+                    ↑
+                </button>
+
+            </div>
+
+
+            <div class="input-note">
+                AI can make mistakes. Verify important catering details.
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ======================================================
+         JAVASCRIPT
+    ======================================================= -->
+
+    <script>
+
+        /* ==================================================
+           ELEMENTS
+        ================================================== */
+
+        const chatWindow =
+            document.getElementById("chatWindow");
+
+        const chatMessages =
+            document.getElementById("chatMessages");
+
+        const userInput =
+            document.getElementById("userInput");
+
+        const sendButton =
+            document.getElementById("sendButton");
+
+        const notificationBadge =
+            document.getElementById("notificationBadge");
+
+        const floatIcon =
+            document.getElementById("floatIcon");
+
+
+        /* ==================================================
+           CHAT HISTORY
+        ================================================== */
+
+        let chatHistory = [];
+
+        let isSending = false;
+
+
+        /* ==================================================
+           OPEN CHAT
+        ================================================== */
+
+        function openChat() {
+
+            chatWindow.classList.add("active");
+
+            notificationBadge.style.display =
+                "none";
+
+            setTimeout(() => {
+
+                userInput.focus();
+
+                scrollChatToBottom();
+
+            }, 250);
+        }
+
+
+        /* ==================================================
+           CLOSE CHAT
+        ================================================== */
+
+        function closeChat() {
+
+            chatWindow.classList.remove(
+                "active"
+            );
+
+            floatIcon.textContent = "✦";
+        }
+
+
+        /* ==================================================
+           TOGGLE CHAT
+        ================================================== */
+
+        function toggleChat() {
+
+            if (
+                chatWindow.classList.contains(
+                    "active"
+                )
+            ) {
+
+                closeChat();
+
+            } else {
+
+                openChat();
+
+            }
+        }
+
+
+        /* ==================================================
+           SCROLL TOP
+        ================================================== */
+
+        function scrollToTop() {
+
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        }
+
+
+        /* ==================================================
+           CURRENT TIME
+        ================================================== */
+
+        function getCurrentTime() {
+
+            return new Date().toLocaleTimeString(
+                [],
+                {
+                    hour: "2-digit",
+                    minute: "2-digit"
+                }
+            );
+        }
+
+
+        /* ==================================================
+           ESCAPE HTML
+        ================================================== */
+
+        function escapeHtml(text) {
+
+            const div =
+                document.createElement("div");
+
+            div.textContent =
+                text;
+
+            return div.innerHTML;
+        }
+
+
+        /* ==================================================
+           BASIC MARKDOWN → HTML
+        ================================================== */
+
+        function formatAIResponse(text) {
+
+            if (!text) {
+
+                return "";
+            }
+
+
+            let html =
+                escapeHtml(text);
+
+
+            /*
+             * Bold
+             */
+
+            html = html.replace(
+                /\*\*(.*?)\*\*/g,
+                "<strong>$1</strong>"
+            );
+
+
+            /*
+             * Headings
+             */
+
+            html = html.replace(
+                /^### (.*)$/gm,
+                "<h3>$1</h3>"
+            );
+
+
+            html = html.replace(
+                /^## (.*)$/gm,
+                "<h2>$1</h2>"
+            );
+
+
+            html = html.replace(
+                /^# (.*)$/gm,
+                "<h1>$1</h1>"
+            );
+
+
+            /*
+             * Bullet lists
+             */
+
+            html = html.replace(
+                /(?:^|\n)[-*] (.*)(?=\n|$)/g,
+                "<li>$1</li>"
+            );
+
+
+            /*
+             * Wrap consecutive li items
+             */
+
+            html = html.replace(
+                /(<li>.*<\/li>)/gs,
+                "<ul>$1</ul>"
+            );
+
+
+            /*
+             * Numbered lists
+             */
+
+            html = html.replace(
+                /(?:^|\n)\d+\.\s+(.*)(?=\n|$)/g,
+                "<li>$1</li>"
+            );
+
+
+            /*
+             * Line breaks
+             */
+
+            html = html.replace(
+                /\n/g,
+                "<br>"
+            );
+
+
+            return html;
+        }
+
+
+        /* ==================================================
+           ADD USER MESSAGE
+        ================================================== */
+
+        function addUserMessage(text) {
+
+            const row =
+                document.createElement("div");
+
+            row.className =
+                "message-row user";
+
+
+            const message =
+                document.createElement("div");
+
+            message.className =
+                "message";
+
+
+            message.innerHTML = `
+                ${escapeHtml(text)}
+                <span class="message-time">
+                    ${getCurrentTime()}
+                </span>
+            `;
+
+
+            row.appendChild(
+                message
+            );
+
+
+            chatMessages.appendChild(
+                row
+            );
+
+
+            scrollChatToBottom();
+        }
+
+
+        /* ==================================================
+           ADD ASSISTANT MESSAGE
+        ================================================== */
+
+        function addBotMessage(text) {
+
+            const row =
+                document.createElement("div");
+
+            row.className =
+                "message-row assistant";
+
+
+            const message =
+                document.createElement("div");
+
+            message.className =
+                "message";
+
+
+            message.innerHTML = `
+                ${formatAIResponse(text)}
+                <span class="message-time">
+                    ${getCurrentTime()}
+                </span>
+            `;
+
+
+            row.appendChild(
+                message
+            );
+
+
+            chatMessages.appendChild(
+                row
+            );
+
+
+            scrollChatToBottom();
+        }
+
+
+        /* ==================================================
+           TYPING INDICATOR
+        ================================================== */
+
+        function showTyping() {
+
+            removeTyping();
+
+
+            const row =
+                document.createElement("div");
+
+            row.className =
+                "typing-row";
+
+            row.id =
+                "typingIndicator";
+
+
+            row.innerHTML = `
+                <div class="typing-bubble">
+
+                    <span class="typing-dot"></span>
+                    <span class="typing-dot"></span>
+                    <span class="typing-dot"></span>
+
+                </div>
+            `;
+
+
+            chatMessages.appendChild(
+                row
+            );
+
+
+            scrollChatToBottom();
+        }
+
+
+        /* ==================================================
+           REMOVE TYPING
+        ================================================== */
+
+        function removeTyping() {
+
+            const typing =
+                document.getElementById(
+                    "typingIndicator"
+                );
+
+
+            if (typing) {
+
+                typing.remove();
+            }
+        }
+
+
+        /* ==================================================
+           SCROLL CHAT
+        ================================================== */
+
+        function scrollChatToBottom() {
+
+            requestAnimationFrame(() => {
+
+                chatMessages.scrollTop =
+                    chatMessages.scrollHeight;
+
+            });
+        }
+
+
+        /* ==================================================
+           CALL FLASK → GEMINI → FIREBASE
+        ================================================== */
+
+        async function getAIResponse(message) {
+
+            const response =
+                await fetch(
+                    "/api/chat",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body: JSON.stringify({
+
+                            message:
+                                message,
+
+                            history:
+                                chatHistory
+
+                        })
+                    }
+                );
+
+
+            let data;
+
+
+            try {
+
+                data =
+                    await response.json();
+
+            } catch (error) {
+
+                throw new Error(
+                    "Invalid server response."
+                );
+            }
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    data.error ||
+                    "Chat request failed."
+                );
+            }
+
+
+            if (!data.reply) {
+
+                throw new Error(
+                    "No AI response received."
+                );
+            }
+
+
+            return data.reply;
+        }
+
+
+        /* ==================================================
+           SEND NORMAL MESSAGE
+        ================================================== */
+
+        async function sendMessage() {
+
+            if (isSending) {
+                return;
+            }
+
+
+            const text =
+                userInput.value.trim();
+
+
+            if (!text) {
+                return;
+            }
+
+
+            openChat();
+
+
+            isSending = true;
+
+            sendButton.disabled =
+                true;
+
+
+            addUserMessage(
+                text
+            );
+
+
+            userInput.value =
+                "";
+
+            autoResizeTextarea();
+
+
+            /*
+             * IMPORTANT:
+             *
+             * Save current conversation BEFORE
+             * sending it to backend.
+             */
+
+            const previousHistory =
+                [...chatHistory];
+
+
+            showTyping();
+
+
+            try {
+
+                /*
+                 * Send to:
+                 *
+                 * /api/chat
+                 *
+                 * Flask then:
+                 *
+                 * Firebase
+                 * +
+                 * Gemini
+                 */
+
+                const reply =
+                    await getAIResponse(
+                        text
+                    );
+
+
+                removeTyping();
+
+
+                addBotMessage(
+                    reply
+                );
+
+
+                /*
+                 * Save conversation
+                 */
+
+                chatHistory.push({
+
+                    role:
+                        "user",
+
+                    content:
+                        text
+
+                });
+
+
+                chatHistory.push({
+
+                    role:
+                        "assistant",
+
+                    content:
+                        reply
+
+                });
+
+
+                /*
+                 * Keep browser history small.
+                 */
+
+                if (
+                    chatHistory.length >
+                    20
+                ) {
+
+                    chatHistory =
+                        chatHistory.slice(
+                            -20
+                        );
+                }
+
+
+            } catch (error) {
+
+                console.error(
+                    "Chat error:",
+                    error
+                );
+
+
+                removeTyping();
+
+
+                addBotMessage(
+                    "⚠️ Sorry, I couldn't connect to the Catering Assistant right now. Please try again."
+                );
+
+
+                /*
+                 * Restore previous history
+                 * if API failed.
+                 */
+
+                chatHistory =
+                    previousHistory;
+
+            } finally {
+
+                isSending =
+                    false;
+
+                sendButton.disabled =
+                    false;
+
+                userInput.focus();
+
+                scrollChatToBottom();
+            }
+        }
+
+
+        /* ==================================================
+           QUICK MESSAGE
+        ================================================== */
+
+        async function sendQuickMessage(
+            text
+        ) {
+
+            if (isSending) {
+                return;
+            }
+
+
+            openChat();
+
+
+            userInput.value =
+                "";
+
+
+            isSending = true;
+
+            sendButton.disabled =
+                true;
+
+
+            addUserMessage(
+                text
+            );
+
+
+            showTyping();
+
+
+            try {
+
+                const reply =
+                    await getAIResponse(
+                        text
+                    );
+
+
+                removeTyping();
+
+
+                addBotMessage(
+                    reply
+                );
+
+
+                chatHistory.push({
+
+                    role:
+                        "user",
+
+                    content:
+                        text
+
+                });
+
+
+                chatHistory.push({
+
+                    role:
+                        "assistant",
+
+                    content:
+                        reply
+
+                });
+
+
+                if (
+                    chatHistory.length >
+                    20
+                ) {
+
+                    chatHistory =
+                        chatHistory.slice(
+                            -20
+                        );
+                }
+
+
+            } catch (error) {
+
+                console.error(
+                    "Quick chat error:",
+                    error
+                );
+
+
+                removeTyping();
+
+
+                addBotMessage(
+                    "⚠️ Sorry, I couldn't connect to the Catering Assistant right now. Please try again."
+                );
+
+            } finally {
+
+                isSending =
+                    false;
+
+                sendButton.disabled =
+                    false;
+
+                userInput.focus();
+
+                scrollChatToBottom();
+            }
+        }
+
+
+        /* ==================================================
+           ENTER KEY
+        ================================================== */
+
+        userInput.addEventListener(
+            "keydown",
+            function(event) {
+
+                if (
+                    event.key === "Enter" &&
+                    !event.shiftKey
+                ) {
+
+                    event.preventDefault();
+
+                    sendMessage();
+                }
+
+            }
+        );
+
+
+        /* ==================================================
+           AUTO RESIZE TEXTAREA
+        ================================================== */
+
+        userInput.addEventListener(
+            "input",
+            autoResizeTextarea
+        );
+
+
+        function autoResizeTextarea() {
+
+            userInput.style.height =
+                "auto";
+
+
+            userInput.style.height =
+                Math.min(
+                    userInput.scrollHeight,
+                    100
+                ) + "px";
+        }
+
+
+        /* ==================================================
+           SCROLL REVEAL
+        ================================================== */
+
+        const revealElements =
+            document.querySelectorAll(
+                ".reveal"
+            );
+
+
+        const revealObserver =
+            new IntersectionObserver(
+                (entries) => {
+
+                    entries.forEach(
+                        (entry) => {
+
+                            if (
+                                entry.isIntersecting
+                            ) {
+
+                                entry.target.classList.add(
+                                    "visible"
+                                );
+
+                                revealObserver.unobserve(
+                                    entry.target
+                                );
+                            }
+
+                        }
+                    );
+
+                },
+                {
+                    threshold: .15
+                }
+            );
+
+
+        revealElements.forEach(
+            (element) => {
+
+                revealObserver.observe(
+                    element
+                );
+
+            }
+        );
+
+
+        /* ==================================================
+           ESCAPE KEY CLOSE
+        ================================================== */
+
+        document.addEventListener(
+            "keydown",
+            function(event) {
+
+                if (
+                    event.key === "Escape"
+                ) {
+
+                    closeChat();
+                }
+
+            }
+        );
+
+
+        /* ==================================================
+           INITIAL SETUP
+        ================================================== */
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function() {
+
+                /*
+                 * Keep initial greeting only.
+                 */
+
+                chatHistory = [];
+
+
+                /*
+                 * Small entrance delay.
+                 */
+
+                setTimeout(() => {
+
+                    document
+                        .querySelector(".hero-content")
+                        ?.classList.add("visible");
+
+                }, 150);
+
+            }
+        );
+
+    </script>
 
 </body>
 </html>
